@@ -1,0 +1,54 @@
+version: 2.1
+
+orbs:
+    aws-cli: circleci/aws-cli@0.1.11
+
+description: |
+    Disables reruns of workflows. Source https://github.com/johnstonjacob/disable-rerun-orb
+
+references:
+    default_parameters: &default_parameters
+        parameters:
+            s3-bucket:
+                type: env_var_name
+                description: the s3 bucket name, without protocol. 
+                default: DISABLE_RERUN_S3_BUCKET
+            s3-key:
+                type: env_var_name
+                description: key inside of s3 bucket
+                default: DISABLE_RERUN_S3_KEY
+            s3-region:
+                type: env_var_name
+                description: s3 bucket region
+                default: DISABLE_RERUN_S3_REGION
+            tag-override:
+                type: string
+                description: Git tag to override rerun disable
+                default: "[CCI ENABLE RERUN]"
+
+
+commands:
+    mark-build-ran:
+        description: Marks build as ran
+        <<: *default_parameters
+        steps:
+            - aws-cli/install
+            - aws-cli/configure:
+                    aws-region: DISABLE_RERUN_S3_REGION
+            - run:
+                name: Create build file
+                command: touch ~/$(echo $CIRCLE_SHA)
+            - run:
+                name: Upload build file to S3
+                command: aws s3 cp ~/$(echo $CIRCLE_SHA) "s3://<< parameters.s3-bucket>>/<< parameters.s3-key>>/$(echo $CIRCLE_SHA)"
+    check-build-ran:
+        description: Checks if the build ran previously
+        <<: *default_parameters
+        steps:
+            - aws-cli/install
+            - aws-cli/configure:
+                    aws-region: DISABLE_RERUN_S3_REGION
+            - run:
+                name: Check if build has been ran
+                command: |
+                    aws s3 ls "s3://<< parameters.s3-key>>/<< parameters.s3-bucket>>/$(echo $CIRCLE_SHA)"

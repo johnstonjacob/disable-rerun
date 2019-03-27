@@ -1,0 +1,15 @@
+version: 2.1
+
+orbs:
+    disable-rerun: johnstonjacob/disable-rerun@dev:alpha
+    cli: circleci/circleci-cli@0.1.2
+    orb-tools: circleci:orb-tools@8.1.0
+
+
+commands:
+    disable-rerun-tests:
+        description: "Verifies insertion and deletion of S3 object"
+        steps:
+            - disable-rerun/check-build-ran
+            - disable-rerun/mark-build-ran
+            - disable-rerun/check-build-ran
