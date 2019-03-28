@@ -25,7 +25,9 @@ references:
                 type: string
                 description: Git commit message to override rerun disable
                 default: "[CCI ENABLE RERUN]"
-
+            test-override:
+                type: boolean
+                default false
 
 commands:
     mark-build-ran:
@@ -60,6 +62,11 @@ commands:
                     echo "Checking if build has been previously ran.."
                     if ! aws s3 ls "s3://$<< parameters.s3-bucket>>/$<< parameters.s3-key>>/$(echo $CIRCLE_SHA1)"
                     then
+                        exit 0
+                    fi
+                    if << parameters.test-override >> 
+                    then
+                        echo "Build was ran. Test mode enabled. Exiting with code 0.."
                         exit 0
                     fi
                     exit 1

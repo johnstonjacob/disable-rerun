@@ -12,7 +12,8 @@ commands:
         steps:
             - disable-rerun/check-build-ran
             - disable-rerun/mark-build-ran
-            - disable-rerun/check-build-ran
+            - disable-rerun/check-build-ran:
+                test-override: true
             - disable-rerun/unmark-build-ran
 
 jobs:
