@@ -3,7 +3,7 @@ version: 2.1
 orbs:
     disable-rerun: johnstonjacob/disable-rerun@dev:alpha
     cli: circleci/circleci-cli@0.1.2
-    orb-tools: circleci:orb-tools@8.1.0
+    orb-tools: circleci/orb-tools@8.1.0
 
 
 commands:
@@ -13,3 +13,21 @@ commands:
             - disable-rerun/check-build-ran
             - disable-rerun/mark-build-ran
             - disable-rerun/check-build-ran
+            - disable-rerun/unmark-build-ran
+
+jobs:
+    test-orb:
+        docker:
+            - image: circleci/golang:12
+        steps:
+            - disable-rerun-tests
+
+workflows:
+    lint_pack-validate_publish-dev:
+        jobs:
+            - orb-tools/lint
+            - orb-tools/publish-dev:
+                orb-name: johnstonjacob/disable-rerun
+                context: orb-publishing
+                requires:
+                    - orb-tools/lint
