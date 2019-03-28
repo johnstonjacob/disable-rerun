@@ -56,6 +56,7 @@ commands:
                         echo "Disable rerun override enabled"
                         exit 0
                     fi
+                    echo "s3://<< parameters.s3-bucket>>/<< parameters.s3-key>>/$(echo $CIRCLE_SHA)"
                     echo "Checking if build has been previously ran.."
                     aws s3 ls "s3://<< parameters.s3-bucket>>/<< parameters.s3-key>>/$(echo $CIRCLE_SHA)"
     unmark-build-ran:
