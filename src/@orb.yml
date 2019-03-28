@@ -6,11 +6,6 @@ orbs:
 description: |
     Disables reruns of workflows. Source https://github.com/johnstonjacob/disable-rerun-orb
 
-executor:
-    default:
-        docker:
-            - image: circleci/python:3.7.2
-
 references:
     default_parameters: &default_parameters
         parameters:
