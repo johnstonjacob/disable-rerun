@@ -27,7 +27,7 @@ references:
                 default: "[CCI ENABLE RERUN]"
             test-override:
                 type: boolean
-                default false
+                default: false
 
 commands:
     mark-build-ran:
