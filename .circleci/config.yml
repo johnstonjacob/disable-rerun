@@ -1,5 +1,18 @@
 version: 2.1
 
+references:
+    integration-dev_filters: &integration-dev_filters
+        branches:
+            ignore: /.*/
+        tags:
+            only: /integration-.*/
+
+    integration-master_filters: &integration-master_filters
+        branches:
+            ignore: /.*/
+        tags:
+            only: /master-.*/
+
 orbs:
     disable-rerun: johnstonjacob/disable-rerun@dev:alpha
     cli: circleci/circleci-cli@0.1.2
@@ -58,18 +71,21 @@ workflows:
     integration-tests_prod-deploy:
         jobs:
             - test-orb:
+                name: test-orb_dev
                 context: ORB-PUBLISHING
-                filters:
-                    branches:
-                        ignore: /.*/
-                    tags:
-                        only: /integration-.*/
+                filters: *integration-dev_filters
+
+            - test-orb:
+                name: test-orb_master
+                context: ORB-PUBLISHING
+                filters: *integration-master_filters
+
             - orb-tools/dev-promote-prod:
                 name: dev-promote-patch
                 orb-name: johnstonjacob/disable-rerun
                 context: ORB-PUBLISHING
                 requires:
-                    - test-orb
+                    - test-orb_master
                 filters:
                     branches:
                         ignore: /.*/
@@ -80,7 +96,7 @@ workflows:
                 orb-name: johnstonjacob/disable-rerun
                 context: ORB-PUBLISHING
                 requires:
-                    - test-orb
+                    - test-orb_master
                 filters:
                     branches:
                         ignore: /.*/
@@ -91,7 +107,7 @@ workflows:
                 orb-name: johnstonjacob/disable-rerun
                 context: ORB-PUBLISHING
                 requires:
-                    - test-orb
+                    - test-orb_master
                 filters:
                     branches:
                         ignore: /.*/
