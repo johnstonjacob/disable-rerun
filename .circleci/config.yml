@@ -58,6 +58,11 @@ workflows:
         jobs:
             - test-orb:
                 context: ORB-PUBLISHING
+                filters:
+                    branches:
+                        ignore: /.*/
+                    tags:
+                        only: /integration-.*/
             - orb-tools/dev-promote-prod:
                 name: dev-promote-patch
                 orb-name: johnstonjacob/disable-rerun
