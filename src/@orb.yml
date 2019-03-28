@@ -51,7 +51,7 @@ commands:
             - checkout:
                 path: ~/proj
             - run:
-                name: Check if build has been ran
+                name: Check if build has been ran previously.
                 command: |
                     cd ~/proj
                     if [[ $(git log --format=%B -n 1 HEAD) == "<< parameters.tag-override >>" ]]; then
@@ -69,6 +69,7 @@ commands:
                         echo "Build was ran. Test mode enabled. Exiting with code 0.."
                         exit 0
                     fi
+                    echo "Build was ran previously. Exiting."
                     exit 1
     unmark-build-ran:
         description: unmarks build as ran
