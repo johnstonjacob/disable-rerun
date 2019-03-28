@@ -51,23 +51,6 @@ workflows:
                   filters:
                       branches:
                         only: master
-
-    integration-tests_prod-deploy:
-        jobs:
-            - test-orb:
-                context: ORB-PUBLISHING
-            - orb-tools/dev-promote-prod:
-                name: dev-promote-patch
-                orb-name: johnstonjacob/disable-rerun
-                context: ORB-PUBLISHING
-                requires: 
-                    - test-orb 
-                filters:
-                    branches:
-                        ignore: /.*/
-                    tags: 
-                        only: /master-patch.*/
-
     integration-tests_prod-deploy:
         jobs:
             - test-orb:
