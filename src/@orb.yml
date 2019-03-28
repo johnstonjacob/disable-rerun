@@ -78,4 +78,4 @@ commands:
             - aws-cli/configure
             - run:
                 name: Removes build file from S3
-                command: aws s3 rm ~/$(echo $CIRCLE_SHA1) "s3://$<< parameters.s3-bucket>>/$<< parameters.s3-key>>/$(echo $CIRCLE_SHA1)"
+                command: aws s3 rm "s3://$<< parameters.s3-bucket>>/$<< parameters.s3-key>>/$(echo $CIRCLE_SHA1)"
