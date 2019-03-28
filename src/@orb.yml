@@ -39,7 +39,7 @@ commands:
                 command: touch ~/$(echo $CIRCLE_SHA1)
             - run:
                 name: Upload build file to S3
-                command: aws s3 cp ~/$(echo $CIRCLE_SHA1) "s3://<< parameters.s3-bucket>>/<< parameters.s3-key>>/$(echo $CIRCLE_SHA1)"
+                command: aws s3 cp ~/$(echo $CIRCLE_SHA1) "s3://$<< parameters.s3-bucket>>/$<< parameters.s3-key>>/$(echo $CIRCLE_SHA1)"
     check-build-ran:
         description: Checks if the build ran previously
         <<: *default_parameters
@@ -56,9 +56,9 @@ commands:
                         echo "Disable rerun override enabled"
                         exit 0
                     fi
-                    echo "s3://<< parameters.s3-bucket>>/<< parameters.s3-key>>/$(echo $CIRCLE_SHA1)"
+                    echo "s3://$<< parameters.s3-bucket>>/$<< parameters.s3-key>>/$(echo $CIRCLE_SHA1)"
                     echo "Checking if build has been previously ran.."
-                    aws s3 ls "s3://<< parameters.s3-bucket>>/<< parameters.s3-key>>/$(echo $CIRCLE_SHA1)"
+                    aws s3 ls "s3://$<< parameters.s3-bucket>>/$<< parameters.s3-key>>/$(echo $CIRCLE_SHA1)"
     unmark-build-ran:
         description: unmarks build as ran
         <<: *default_parameters
@@ -67,4 +67,4 @@ commands:
             - aws-cli/configure
             - run:
                 name: Removes build file from S3
-                command: aws s3 rm ~/$(echo $CIRCLE_SHA1) "s3://<< parameters.s3-bucket>>/<< parameters.s3-key>>/$(echo $CIRCLE_SHA1)"
+                command: aws s3 rm ~/$(echo $CIRCLE_SHA1) "s3://$<< parameters.s3-bucket>>/$<< parameters.s3-key>>/$(echo $CIRCLE_SHA1)"
