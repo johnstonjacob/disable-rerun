@@ -28,6 +28,80 @@ workflows:
             - orb-tools/lint
             - orb-tools/publish-dev:
                 orb-name: johnstonjacob/disable-rerun
-                context: orb-publishing
+                context: ORB-PUBLISHING
                 requires:
                     - orb-tools/lint
+            - orb-tools/trigger-integration-workflow:
+                name: trigger-integration-dev
+                context: ORB-PUBLISHING
+                ssh-fingerprints: 68:22:fd:bc:5d:88:d8:0f:31:7e:49:f1:df:da:88:1a 
+                requires:
+                    - orb-tools/publish-dev
+                filters:
+                    branches:
+                      ignore: master
+
+            - orb-tools/trigger-integration-workflow:
+                  name: trigger-integration-master
+                  context: ORB-PUBLISHING
+                  ssh-fingerprints: 68:22:fd:bc:5d:88:d8:0f:31:7e:49:f1:df:da:88:1a
+                  tag: master
+                  requires:
+                      - orb-tools/publish-dev
+                  filters:
+                      branches:
+                        only: master
+
+    integration-tests_prod-deploy:
+        jobs:
+            - test-orb:
+                context: ORB-PUBLISHING
+            - orb-tools/dev-promote-prod:
+                name: dev-promote-patch
+                orb-name: johnstonjacob/disable-rerun
+                context: ORB-PUBLISHING
+                requires: 
+                    - test-orb 
+                filters:
+                    branches:
+                        ignore: /.*/
+                    tags: 
+                        only: /master-patch.*/
+
+    integration-tests_prod-deploy:
+        jobs:
+            - test-orb:
+                context: ORB-PUBLISHING
+            - orb-tools/dev-promote-prod:
+                name: dev-promote-patch
+                orb-name: johnstonjacob/disable-rerun
+                context: ORB-PUBLISHING
+                requires: 
+                    - test-orb 
+                filters:
+                    branches:
+                        ignore: /.*/
+                    tags: 
+                        only: /master-patch.*/
+            - orb-tools/dev-promote-prod:
+                name: dev-promote-minor
+                orb-name: johnstonjacob/disable-rerun
+                context: ORB-PUBLISHING
+                requires: 
+                    - test-orb 
+                filters:
+                    branches:
+                        ignore: /.*/
+                    tags: 
+                        only: /master-minor.*/
+            - orb-tools/dev-promote-prod:
+                name: dev-promote-major
+                orb-name: johnstonjacob/disable-rerun
+                context: ORB-PUBLISHING
+                requires: 
+                    - test-orb 
+                filters:
+                    branches:
+                        ignore: /.*/
+                    tags: 
+                        only: /master-minor.*/
