@@ -33,7 +33,7 @@ commands:
         <<: *default_parameters
         steps:
             - aws-cli/install
-            - aws-cli/configure:
+            - aws-cli/configure
             - run:
                 name: Create build file
                 command: touch ~/$(echo $CIRCLE_SHA)
@@ -45,7 +45,7 @@ commands:
         <<: *default_parameters
         steps:
             - aws-cli/install
-            - aws-cli/configure:
+            - aws-cli/configure
             - run:
                 name: Check if build has been ran
                 command: |
@@ -60,7 +60,7 @@ commands:
         <<: *default_parameters
         steps:
             - aws-cli/install
-            - aws-cli/configure:
+            - aws-cli/configure
             - run:
                 name: Removes build file from S3
                 command: aws s3 rm ~/$(echo $CIRCLE_SHA) "s3://<< parameters.s3-bucket>>/<< parameters.s3-key>>/$(echo $CIRCLE_SHA)"
