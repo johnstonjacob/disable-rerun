@@ -59,8 +59,8 @@ commands:
                     echo "s3://$<< parameters.s3-bucket>>/$<< parameters.s3-key>>/$(echo $CIRCLE_SHA1)"
                     echo "Checking if build has been previously ran.."
                     if ! aws s3 ls "s3://$<< parameters.s3-bucket>>/$<< parameters.s3-key>>/$(echo $CIRCLE_SHA1)"
-                    then 
-                        exit 0   
+                    then
+                        exit 0
                     fi
                     exit 1
     unmark-build-ran:
