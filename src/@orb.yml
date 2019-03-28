@@ -11,7 +11,7 @@ references:
         parameters:
             s3-bucket:
                 type: env_var_name
-                description: the s3 bucket name, without protocol. 
+                description: the s3 bucket name, without protocol.
                 default: DISABLE_RERUN_S3_BUCKET
             s3-key:
                 type: env_var_name

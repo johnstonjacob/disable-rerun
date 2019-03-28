@@ -34,7 +34,7 @@ workflows:
             - orb-tools/trigger-integration-workflow:
                 name: trigger-integration-dev
                 context: ORB-PUBLISHING
-                ssh-fingerprints: 68:22:fd:bc:5d:88:d8:0f:31:7e:49:f1:df:da:88:1a 
+                ssh-fingerprints: 68:22:fd:bc:5d:88:d8:0f:31:7e:49:f1:df:da:88:1a
                 requires:
                     - orb-tools/publish-dev
                 filters:
@@ -59,32 +59,32 @@ workflows:
                 name: dev-promote-patch
                 orb-name: johnstonjacob/disable-rerun
                 context: ORB-PUBLISHING
-                requires: 
-                    - test-orb 
+                requires:
+                    - test-orb
                 filters:
                     branches:
                         ignore: /.*/
-                    tags: 
+                    tags:
                         only: /master-patch.*/
             - orb-tools/dev-promote-prod:
                 name: dev-promote-minor
                 orb-name: johnstonjacob/disable-rerun
                 context: ORB-PUBLISHING
-                requires: 
-                    - test-orb 
+                requires:
+                    - test-orb
                 filters:
                     branches:
                         ignore: /.*/
-                    tags: 
+                    tags:
                         only: /master-minor.*/
             - orb-tools/dev-promote-prod:
                 name: dev-promote-major
                 orb-name: johnstonjacob/disable-rerun
                 context: ORB-PUBLISHING
-                requires: 
-                    - test-orb 
+                requires:
+                    - test-orb
                 filters:
                     branches:
                         ignore: /.*/
-                    tags: 
+                    tags:
                         only: /master-minor.*/
