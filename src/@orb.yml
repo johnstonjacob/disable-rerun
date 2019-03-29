@@ -6,8 +6,9 @@ orbs:
 description: |
     Disables reruns of workflows. Source https://github.com/johnstonjacob/disable-rerun-orb
 
-references:
-    default_parameters: &default_parameters
+commands:
+    mark-build-ran:
+        description: Marks build as ran
         parameters:
             s3-bucket:
                 type: env_var_name
@@ -17,22 +18,6 @@ references:
                 type: env_var_name
                 description: key inside of s3 bucket
                 default: DISABLE_RERUN_S3_KEY
-            s3-region:
-                type: env_var_name
-                description: s3 bucket region
-                default: DISABLE_RERUN_S3_REGION
-            tag-override:
-                type: string
-                description: Git commit message to override rerun disable
-                default: "[CCI ENABLE RERUN]"
-            test-override:
-                type: boolean
-                default: false
-
-commands:
-    mark-build-ran:
-        description: Marks build as ran
-        <<: *default_parameters
         steps:
             - aws-cli/install
             - aws-cli/configure
@@ -44,7 +29,23 @@ commands:
                 command: aws s3 cp ~/$(echo $CIRCLE_SHA1) "s3://$<< parameters.s3-bucket>>/$<< parameters.s3-key>>/$(echo $CIRCLE_SHA1)"
     check-build-ran:
         description: Checks if the build ran previously
-        <<: *default_parameters
+        parameters:
+            s3-bucket:
+                type: env_var_name
+                description: the s3 bucket name, without protocol.
+                default: DISABLE_RERUN_S3_BUCKET
+            s3-key:
+                type: env_var_name
+                description: key inside of s3 bucket
+                default: DISABLE_RERUN_S3_KEY
+            tag-override:
+                type: string
+                description: Git commit message to override rerun disable
+                default: "[CCI ENABLE RERUN]"
+            test-override:
+                type: boolean
+                default: false
+
         steps:
             - aws-cli/install
             - aws-cli/configure
@@ -73,7 +74,15 @@ commands:
                     exit 1
     unmark-build-ran:
         description: unmarks build as ran
-        <<: *default_parameters
+        parameters:
+            s3-bucket:
+                type: env_var_name
+                description: the s3 bucket name, without protocol.
+                default: DISABLE_RERUN_S3_BUCKET
+            s3-key:
+                type: env_var_name
+                description: key inside of s3 bucket
+                default: DISABLE_RERUN_S3_KEY
         steps:
             - aws-cli/install
             - aws-cli/configure

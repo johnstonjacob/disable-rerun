@@ -1,0 +1,44 @@
+description: Checks if the build ran previously
+parameters:
+    s3-bucket:
+        type: env_var_name
+        description: the s3 bucket name, without protocol.
+        default: DISABLE_RERUN_S3_BUCKET
+    s3-key:
+        type: env_var_name
+        description: key inside of s3 bucket
+        default: DISABLE_RERUN_S3_KEY
+    tag-override:
+        type: string
+        description: Git commit message to override rerun disable
+        default: "[CCI ENABLE RERUN]"
+    test-override:
+        type: boolean
+        default: false
+
+steps:
+    - aws-cli/install
+    - aws-cli/configure
+    - checkout:
+        path: ~/proj
+    - run:
+        name: Check if build has been ran previously.
+        command: |
+            cd ~/proj
+            if [[ $(git log --format=%B -n 1 HEAD) == "<< parameters.tag-override >>" ]]; then
+                echo "Disable rerun override enabled"
+                exit 0
+            fi
+            echo "s3://$<< parameters.s3-bucket>>/$<< parameters.s3-key>>/$(echo $CIRCLE_SHA1)"
+            echo "Checking if build has been previously ran.."
+            if ! aws s3 ls "s3://$<< parameters.s3-bucket>>/$<< parameters.s3-key>>/$(echo $CIRCLE_SHA1)"
+            then
+                exit 0
+            fi
+            if << parameters.test-override >>
+            then
+                echo "Build was ran. Test mode enabled. Exiting with code 0.."
+                exit 0
+            fi
+            echo "Build was ran previously. Exiting."
+            exit 1
