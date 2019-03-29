@@ -25,7 +25,7 @@ steps:
         name: Check if build has been ran previously.
         command: |
             cd ~/proj
-            if [[ $(git log --format=%B -n 1 HEAD) == "<< parameters.tag-override >>" ]]; then
+            if [[ $(git log --format=%B -n 1 HEAD) == *"<< parameters.tag-override >>"* ]]; then
                 echo "Disable rerun override enabled"
                 exit 0
             fi
