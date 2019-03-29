@@ -1,0 +1,16 @@
+description: unmarks build as ran
+parameters:
+    s3-bucket:
+        type: env_var_name
+        description: the s3 bucket name, without protocol.
+        default: DISABLE_RERUN_S3_BUCKET
+    s3-key:
+        type: env_var_name
+        description: key inside of s3 bucket
+        default: DISABLE_RERUN_S3_KEY
+steps:
+    - aws-cli/install
+    - aws-cli/configure
+    - run:
+        name: Removes build file from S3
+        command: aws s3 rm "s3://$<< parameters.s3-bucket>>/$<< parameters.s3-key>>/$(echo $CIRCLE_SHA1)"
